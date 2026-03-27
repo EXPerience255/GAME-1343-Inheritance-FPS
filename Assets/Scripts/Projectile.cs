@@ -31,7 +31,7 @@ public class Projectile : MonoBehaviour
         knockback = force;
         OnHit += onHit;
 
-        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+        GetComponent<Rigidbody>().linearVelocity = transform.forward * speed;
         Destroy(gameObject, lifetime);
         
     }
@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour
         var target = other.gameObject.GetComponent<Damageable>();
         if (target != null)
         {
-            var direction = GetComponent<Rigidbody>().velocity;
+            var direction = GetComponent<Rigidbody>().linearVelocity;
             direction.Normalize();
 
             Debug.Log("hit enemy trigger");
