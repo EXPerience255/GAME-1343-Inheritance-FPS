@@ -1843,6 +1843,10 @@ PrefabInstance:
       propertyPath: rotationSpeed
       value: 180
       objectReference: {fileID: 0}
+    - target: {fileID: 8589143665434788, guid: fa9c5921f7a67fe49822424e8604a768, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8589143665434790, guid: fa9c5921f7a67fe49822424e8604a768, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -6286,8 +6290,9 @@ MonoBehaviour:
   bulletPrefab: {fileID: 487163690456666478, guid: 0eee7a129a8e4e744bbf1d855443e4cf, type: 3}
   anim: {fileID: 3439219414659379155}
   maxAmmo: 1
-  timeBetweenShots: 0
+  timeBetweenShots: 3
   isAutomatic: 0
+  orbPrefab: {fileID: 3350388937813850181, guid: 216204554e3c9ed41a1dfd85d2d6c37a, type: 3}
 --- !u!1 &5278086809643003949
 GameObject:
   m_ObjectHideFlags: 0
