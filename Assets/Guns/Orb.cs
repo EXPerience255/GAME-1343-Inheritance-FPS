@@ -20,7 +20,7 @@ public class Orb : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var damageable = other.gameObject.GetComponent<Damageable>();
-        if (damageable != null)
+        if (damageable != null && other.transform == target)
         {
             damageable.Hit(new Vector3(0, 0, 0), 2147483647);
             GetComponent<MeshRenderer>().enabled = false;
