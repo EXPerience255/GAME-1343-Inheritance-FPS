@@ -56,8 +56,6 @@ public class FPSController : MonoBehaviour
     {
         Movement();
         Look();
-        HandleSwitchGun();
-        //FireGun();
 
         if (autofiring) currentGun?.AttemptFire();
 
@@ -99,30 +97,6 @@ public class FPSController : MonoBehaviour
         transform.Rotate(Vector3.up * lookX);
     }
 
-    void HandleSwitchGun()
-    {
-        if (equippedGuns.Count == 0)
-            return;
-
-        if(Input.GetAxis("Mouse ScrollWheel") > 0)
-        {
-            gunIndex++;
-            if (gunIndex > equippedGuns.Count - 1)
-                gunIndex = 0;
-
-            EquipGun(equippedGuns[gunIndex]);
-        }
-
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
-        {
-            gunIndex--;
-            if (gunIndex < 0)
-                gunIndex = equippedGuns.Count - 1;
-
-            EquipGun(equippedGuns[gunIndex]);
-        }
-    }
-
     void EquipGun(Gun g)
     {
         // disable current gun, if there is one
@@ -151,6 +125,32 @@ public class FPSController : MonoBehaviour
         if (grounded && ctx.performed)
         {
             velocity.y += Mathf.Sqrt(jumpForce * -1 * gravity);
+        }
+    }
+    public void SwitchGun(InputAction.CallbackContext ctx)
+    {
+        Debug.Log(ctx.ReadValue<float>());
+
+        if (equippedGuns.Count == 0)
+            return;
+
+        var v = ctx.ReadValue<float>();
+
+        if (v > 0)
+        {
+            gunIndex++;
+            if (gunIndex > equippedGuns.Count - 1)
+                gunIndex = 0;
+
+            EquipGun(equippedGuns[gunIndex]);
+        }
+        else if (v < 0)
+        {
+            gunIndex--;
+            if (gunIndex < 0)
+                gunIndex = equippedGuns.Count - 1;
+
+            EquipGun(equippedGuns[gunIndex]);
         }
     }
 
