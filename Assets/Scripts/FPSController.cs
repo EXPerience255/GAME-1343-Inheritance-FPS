@@ -26,6 +26,7 @@ public class FPSController : MonoBehaviour
     List<Gun> equippedGuns = new List<Gun>();
     int gunIndex = 0;
     Gun currentGun = null;
+    private bool autofiring;
 
     // properties
     public GameObject Cam { get { return cam; } }
@@ -55,7 +56,9 @@ public class FPSController : MonoBehaviour
         Movement();
         Look();
         HandleSwitchGun();
-        FireGun();
+        //FireGun();
+
+        if (autofiring) currentGun?.AttemptFire();
 
         // always go back to "no velocity"
         // "velocity" is for movement speed that we gain in addition to our movement (falling, knockback, etc.)
@@ -119,32 +122,6 @@ public class FPSController : MonoBehaviour
         }
     }
 
-    void FireGun()
-    {
-        // don't fire if we don't have a gun
-        if (currentGun == null)
-            return;
-
-        // pressed the fire button
-        if(GetPressFire())
-        {
-            currentGun?.AttemptFire();
-        }
-
-        // holding the fire button (for automatic)
-        else if(GetHoldFire())
-        {
-            if (currentGun.AttemptAutomaticFire())
-                currentGun?.AttemptFire();
-        }
-
-        // pressed the alt fire button
-        if (GetPressAltFire())
-        {
-            currentGun?.AttemptAltFire();
-        }
-    }
-
     void EquipGun(Gun g)
     {
         // disable current gun, if there is one
@@ -167,6 +144,38 @@ public class FPSController : MonoBehaviour
         if (grounded && ctx.performed)
         {
             velocity.y += Mathf.Sqrt(jumpForce * -1 * gravity);
+        }
+    }
+
+    public void DoFire(InputAction.CallbackContext ctx)
+    {
+        if (currentGun == null)
+            return;
+
+        if (ctx.performed)
+        {
+            if (currentGun.AttemptAutomaticFire())
+            {
+                autofiring = true;
+            }
+            else
+            {
+                currentGun?.AttemptFire();
+            }
+        }
+
+        if (ctx.canceled) autofiring = false;
+    }
+
+    // none of the guns have alt-fires, but it's here for completion
+    public void DoAltFire(InputAction.CallbackContext ctx)
+    {
+        if (currentGun == null)
+            return;
+
+        if (ctx.performed)
+        {
+            currentGun?.AttemptAltFire();
         }
     }
 
@@ -195,21 +204,6 @@ public class FPSController : MonoBehaviour
     }
 
     // Input methods
-
-    bool GetPressFire()
-    {
-        return Input.GetButtonDown("Fire1");
-    }
-
-    bool GetHoldFire()
-    {
-        return Input.GetButton("Fire1");
-    }
-
-    bool GetPressAltFire()
-    {
-        return Input.GetButtonDown("Fire2");
-    }
 
     Vector2 GetPlayerMovementVector()
     {
