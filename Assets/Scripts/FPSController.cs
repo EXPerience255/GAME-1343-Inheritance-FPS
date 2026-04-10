@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class FPSController : MonoBehaviour
 {
@@ -74,11 +75,6 @@ public class FPSController : MonoBehaviour
         Vector2 movement = GetPlayerMovementVector();
         Vector3 move = transform.right * movement.x + transform.forward * movement.y;
         controller.Move(move * movementSpeed * (GetSprint() ? 2 : 1) * Time.deltaTime);
-
-        if (Input.GetButtonDown("Jump") && grounded)
-        {
-            velocity.y += Mathf.Sqrt (jumpForce * -1 * gravity);
-        }
 
         velocity.y += gravity * Time.deltaTime;
 
@@ -164,7 +160,17 @@ public class FPSController : MonoBehaviour
         g.Equip(this);
     }
 
-    // public methods
+    // new controls
+
+    public void DoJump(InputAction.CallbackContext ctx) 
+    {
+        if (grounded && ctx.performed)
+        {
+            velocity.y += Mathf.Sqrt(jumpForce * -1 * gravity);
+        }
+    }
+
+    // general public methods
 
     public void AddGun(Gun g)
     {
