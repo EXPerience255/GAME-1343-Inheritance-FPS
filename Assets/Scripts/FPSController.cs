@@ -26,6 +26,9 @@ public class FPSController : MonoBehaviour
     List<Gun> equippedGuns = new List<Gun>();
     int gunIndex = 0;
     Gun currentGun = null;
+
+    // new input system variables
+    private Vector2 looking;
     private bool autofiring;
     private bool isSprinting;
 
@@ -85,7 +88,6 @@ public class FPSController : MonoBehaviour
 
     void Look()
     {
-        Vector2 looking = GetPlayerLook();
         float lookX = looking.x * lookSensitivityX * Time.deltaTime;
         float lookY = looking.y * lookSensitivityY * Time.deltaTime;
 
@@ -114,6 +116,11 @@ public class FPSController : MonoBehaviour
 
     // new controls
 
+    public void DoLook(InputAction.CallbackContext ctx)
+    {
+        looking = ctx.ReadValue<Vector2>();
+    }
+
     public void SetSprint(InputAction.CallbackContext ctx)
     {
         if (ctx.performed) isSprinting = true;
@@ -127,6 +134,7 @@ public class FPSController : MonoBehaviour
             velocity.y += Mathf.Sqrt(jumpForce * -1 * gravity);
         }
     }
+
     public void SwitchGun(InputAction.CallbackContext ctx)
     {
         Debug.Log(ctx.ReadValue<float>());
