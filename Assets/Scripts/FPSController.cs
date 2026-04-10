@@ -28,6 +28,7 @@ public class FPSController : MonoBehaviour
     Gun currentGun = null;
 
     // new input system variables
+    private Vector2 movement;
     private Vector2 looking;
     private bool autofiring;
     private bool isSprinting;
@@ -77,7 +78,6 @@ public class FPSController : MonoBehaviour
             velocity.y = -1;// -0.5f;
         }
 
-        Vector2 movement = GetPlayerMovementVector();
         Vector3 move = transform.right * movement.x + transform.forward * movement.y;
         controller.Move(move * movementSpeed * (isSprinting ? 2 : 1) * Time.deltaTime);
 
@@ -115,6 +115,11 @@ public class FPSController : MonoBehaviour
     }
 
     // new controls
+
+    public void DoMove(InputAction.CallbackContext ctx)
+    {
+        movement = ctx.ReadValue<Vector2>();
+    }
 
     public void DoLook(InputAction.CallbackContext ctx)
     {
@@ -216,18 +221,6 @@ public class FPSController : MonoBehaviour
     public void Respawn()
     {
         transform.position = origin;
-    }
-
-    // Input methods
-
-    Vector2 GetPlayerMovementVector()
-    {
-        return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-    }
-
-    Vector2 GetPlayerLook()
-    {
-        return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
     }
 
     // Collision methods
