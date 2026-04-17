@@ -235,11 +235,9 @@ public class FPSController : MonoBehaviour
             velocity = (20 * knockbackAngle);
         }
 
-        if (hit.gameObject.GetComponent <KillZone>())
+        if (hit.gameObject.GetComponent<KillZone>())
         {
             Respawn();
         }
     }
-
-
 }

@@ -109,4 +109,19 @@ public class EnemyNav : MonoBehaviour
         yield return new WaitForSeconds(recoveryTime - 0.25f);
         state = States.pursue;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<FPSController>())
+        {
+            if (state == States.attack)
+            {
+                Debug.Log("Damaged!");
+            }
+            else
+            {
+                Debug.Log("Collided w/o Damage.");
+            }
+        }
+    }
 }
