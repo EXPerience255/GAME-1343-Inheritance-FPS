@@ -309,7 +309,7 @@ MonoBehaviour:
   player: {fileID: 0}
   wanderRange: 10
   sightRange: 10
-  attackRange: 2
+  attackRange: 5
   recoveryTime: 1
   state: 0
 --- !u!195 &6687026915697507519

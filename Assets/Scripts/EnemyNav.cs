@@ -1,8 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Rendering;
 
-enum States
+public enum States
 {
     wander,
     pursue,
@@ -20,7 +20,7 @@ public class EnemyNav : MonoBehaviour
     [SerializeField] float sightRange;
     [SerializeField] float attackRange;
     [SerializeField] float recoveryTime;
-    [SerializeField] States state;
+    [SerializeField] public States state;
 
     Vector3 startingLocation;
     float wanderTimer = 0;
@@ -42,10 +42,10 @@ public class EnemyNav : MonoBehaviour
                 UpdatePersue();
                 break;
             case States.attack:
-                //UpdateAttack();
+                // IEnumerator DoAttack()
                 break;
             case States.recovery:
-                //UpdateRecovery();
+                // IEnumerator Recover()
                 break;
         }
     }
@@ -71,9 +71,10 @@ public class EnemyNav : MonoBehaviour
 
     void UpdatePersue()
     {
+        agent.enabled = true;
         agent.SetDestination(new Vector3(
                 player.position.x,
-                startingLocation.y,
+                player.position.y,
                 player.position.z
         ));
 
@@ -82,5 +83,30 @@ public class EnemyNav : MonoBehaviour
             wanderTimer = 1;
             state = States.wander;
         }
+        else if (Vector3.Distance(transform.position, player.position) <= attackRange)
+        {
+            state = States.attack;
+            StartCoroutine(DoAttack());
+        }
+    }
+
+    IEnumerator DoAttack()
+    {
+        agent.enabled = false;
+        rb.AddForce(10 * Vector3.Normalize(new Vector3(
+               player.position.x - transform.position.x,
+               (player.position.y - transform.position.y) * 2,
+               player.position.z - transform.position.z
+        )) + new Vector3(0, 5, 0), ForceMode.Impulse);
+        yield return new WaitForSeconds(0.25f);
+        yield return new WaitUntil(() => Physics.Raycast(transform.position, Vector3.down, 1.1f));
+        state = States.recovery;
+        StartCoroutine(Recover());
+    }
+
+    IEnumerator Recover()
+    {
+        yield return new WaitForSeconds(recoveryTime - 0.25f);
+        state = States.pursue;
     }
 }
